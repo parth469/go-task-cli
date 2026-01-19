@@ -52,3 +52,7 @@ func ListAll() ([]byte, error) {
 	return data, nil
 
 }
+
+func WriteToFile(data []byte) error {
+	return os.WriteFile(filePath, data, 0644)
+}
