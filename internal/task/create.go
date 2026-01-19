@@ -24,7 +24,7 @@ func Add(args []string) error {
 	addFlag.StringVar(&description,
 		"description",
 		"",
-		"Create a new task with the given title. E \n Example: -add \"Buy groceries\"",
+		"Create a new task with the given description. \n Example: -description \"Buy groceries and milk\"",
 	)
 
 	addFlag.Parse(args)

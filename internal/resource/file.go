@@ -20,8 +20,8 @@ func FileCheck() error {
 	return nil
 }
 
-func AppendToFile(v any) error {
-	var list []any
+func AppendToFile[T any](v T) error {
+	var list []T
 
 	data, _ := os.ReadFile(filePath)
 	if len(data) > 0 {
@@ -40,4 +40,15 @@ func AppendToFile(v any) error {
 	}
 
 	return os.WriteFile(filePath, out, 0644)
+}
+
+func ListAll() ([]byte, error) {
+	data, err := os.ReadFile(filePath)
+
+	if err != nil {
+		return nil, fmt.Errorf("fail to open file %w", err)
+	}
+
+	return data, nil
+
 }

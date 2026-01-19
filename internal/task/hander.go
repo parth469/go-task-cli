@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func Execute() error {
@@ -18,7 +19,20 @@ func Execute() error {
 	case "add":
 		Add(args)
 	case "update":
-		Update(args)
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			return fmt.Errorf("fail to parse id")
+		}
+		Update(args[1:], id)
+	case "delete":
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			return fmt.Errorf("fail to parse id")
+		}
+		Delete(id)
+	case "list":
+		List(args)
+
 	default:
 		fmt.Println("expected 'add' or 'update' subcommands", os.Args[1])
 		os.Exit(1)
