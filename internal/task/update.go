@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/parth469/go-task-cli/internal/resource"
 )
@@ -31,8 +32,6 @@ func Update(args []string, id int) error {
 
 	updateFlag.Parse(args)
 
-	updateFlag.Parse(args)
-
 	if title == "" && description == "" {
 		return errors.New("nothing to update: provide -title and/or -description")
 	}
@@ -50,6 +49,7 @@ func Update(args []string, id int) error {
 	recordFound := false
 	for i, v := range taskLists {
 		if v.Id == id {
+			taskLists[i].UpdateAt = time.Now()
 			recordFound = true
 			if title != "" {
 				taskLists[i].Title = title

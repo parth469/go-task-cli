@@ -33,6 +33,18 @@ func Execute() error {
 		}
 		return wrap("delete record", Delete(id))
 
+	case "mark":
+		id, _, err := parseID(args)
+		status := os.Args[3]
+
+		if status == "" {
+			return errors.New("please provide status")
+		}
+		if err != nil {
+			return err
+		}
+		return wrap("mark record", StatusUpdate(id, status))
+
 	case "list":
 		return List(args)
 
