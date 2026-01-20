@@ -8,35 +8,55 @@ import (
 )
 
 func Execute() error {
-	command := os.Args[1:]
-
-	if len(command) == 0 {
-		return errors.New("no command provided. please use the correct syntax. for example: -add \"ask title\"")
+	if len(os.Args) < 2 {
+		return errors.New("no command provided")
 	}
 
-	args := command[1:]
-	switch os.Args[1] {
+	action := os.Args[1]
+	args := os.Args[2:]
+
+	switch action {
 	case "add":
-		Add(args)
+		return wrap("create record", Add(args))
+
 	case "update":
-		id, err := strconv.Atoi(args[0])
+		id, rest, err := parseID(args)
 		if err != nil {
-			return fmt.Errorf("fail to parse id")
+			return err
 		}
-		Update(args[1:], id)
+		return wrap("update record", Update(rest, id))
+
 	case "delete":
-		id, err := strconv.Atoi(args[0])
+		id, _, err := parseID(args)
 		if err != nil {
-			return fmt.Errorf("fail to parse id")
+			return err
 		}
-		Delete(id)
+		return wrap("delete record", Delete(id))
+
 	case "list":
-		List(args)
+		return List(args)
 
 	default:
-		fmt.Println("expected 'add' or 'update' subcommands", os.Args[1])
-		os.Exit(1)
+		return fmt.Errorf("unknown command: %s", action)
+	}
+}
+
+func parseID(args []string) (int, []string, error) {
+	if len(args) == 0 {
+		return 0, nil, errors.New("missing id")
 	}
 
-	return nil
+	id, err := strconv.Atoi(args[0])
+	if err != nil {
+		return 0, nil, errors.New("invalid id")
+	}
+
+	return id, args[1:], nil
+}
+
+func wrap(action string, err error) error {
+	if err == nil {
+		return nil
+	}
+	return fmt.Errorf("failed to %s: %w", action, err)
 }
